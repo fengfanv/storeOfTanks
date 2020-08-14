@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <h1>订单管理</h1>
+    <button onclick="getOrder()">获取订单列表</button>
+    <ul id="list"></ul>
+
+    <script src="./jquery.js"></script>
+    <script>
+        function getOrder() {
+            $.ajax({
+                type: "get",
+                url: "/api/getallorder",
+                success: function (res) {
+                    console.log(res);
+                    if (res.status) {
+                        let str = '';
+                        let data = res.data;
+                        let len = res.data.length;
+                        for (let i = 0; i < len; i++) {
+                            let productStr = '';
+                            let productList = JSON.parse(data[i].product_list);
+                            let productLen = productList.length;
+                            for (let j = 0; j < productLen; j++) {
+                                productStr += `
+                                    <li style="margin-bottom:50px;border:1px solid red;">
+                                        <div>
+                                            <img src="${productList[j].icon}"/>
+                                        </div>
+                                        <div>
+                                            产品名称：${productList[j].productName}
+                                        </div>
+                                        <div>
+                                            <p>选中的产品规格：${productList[j].selectValueArr.toString()}</p>
+                                            <p>购买数量：${productList[j].number}</p>
+                                            <p>产品单价：${productList[j].price}</p>
+                                        </div>
+                                    </li>
+                                `;
+                            };
+                            let random = Math.floor(Math.random() * (i*100)) + 1;
+                            let selectId = 'select_'+random;
+                            str += `<li style="margin-bottom:50px;border:1px solid #ccc;">
+                                <h3>购买用户：${data[i].account}</h3>
+                                <div>订单创建时间：${formatDate(data[i].create_time)}</div>
+                                <div>订单总价格：${data[i].price}</div>
+                                <div>
+                                    <label>订单状态：</label>
+                                    <select id="${selectId}" value="${data[i].status}">
+                                        <option value="1" ${data[i].status==1?'selected="selected"':''}>未付款</option>
+                                        <option value="2" ${data[i].status==2?'selected="selected"':''}>待发货</option>
+                                        <option value="3" ${data[i].status==3?'selected="selected"':''}>待收货</option>
+                                        <option value="4" ${data[i].status==4?'selected="selected"':''}>已完成</option>
+                                    </select>
+                                    <button onclick="setOrderStatus(${data[i].id},'${selectId}')">提交修改</button>
+                                </div>
+                                <div>
+                                    <label>订单产品列表：</label>
+                                    <ul>
+                                        ${productStr}
+                                    </ul>
+                                </div>
+                            </li>`;
+                        }
+                        $('#list').html(str);
+                    } else {
+                        alert(res.message)
+                    }
+                },
+                error: function (err) {
+                    alert('请求所有订单出现错误！')
+                }
+            })
+        }
+
+
+        function formatDate(num) {
+            let date = new Date(num);
+            let YY = date.getFullYear() + '-';
+            let MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+            let DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+            let hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+            let mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+            let ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+            return YY + MM + DD + " " + hh + mm + ss;
+        }
+
+        //设置订单状态
+        function setOrderStatus(id,selectId){
+            $.ajax({
+                type:'post',
+                url:"/api/setorderstatus",
+                data:{
+                    id:id,
+                    status:$('#'+selectId).val()
+                },
+                success:function(res){
+                    if(res.status){
+                        alert('订单状态修改成功！')
+                    }else{
+                        alert('订单状态修改失败！')
+                    }
+                },
+                error:function(err){
+                    alert('请求修改订单状态失败！')
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

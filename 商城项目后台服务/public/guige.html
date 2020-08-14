@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品规格页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .clearfix:after,
+        .clearfix:before {
+            content: "";
+            display: table;
+        }
+
+        .clearfix:after {
+            clear: both;
+        }
+
+        .clearfix {
+            zoom: 1;
+        }
+
+        .productList {
+            width: 200px;
+            height: 99vh;
+            background-color: yellowgreen;
+            float: left;
+        }
+
+        .productList>ul {
+            width: 100%;
+            height: 90%;
+            margin-top: 20px;
+            overflow-y: scroll;
+        }
+
+        .productList>ul>li {
+            margin-bottom: 20px;
+            border: 1px solid black;
+
+        }
+
+        .guige {
+            width: 300px;
+            height: 99vh;
+            background-color: seagreen;
+            float: left;
+        }
+
+        .setguigeclassname {
+            width: 100%;
+            height: 50%;
+            border-bottom: 2px solid;
+        }
+
+        .showguige {
+            width: 100%;
+            height: 48%;
+        }
+
+        .productname {
+            font-size: 16px;
+        }
+
+        .three {
+            width: 300px;
+            height: 99vh;
+            background-color: green;
+            float: left;
+        }
+    </style>
+</head>
+
+<body class="clearfix">
+    <!--产品列表页面-->
+    <div class="productList">
+        <button onclick="getproduct()">刷新产品列表页面</button>
+        <ul></ul>
+    </div>
+    <!--规格界面-->
+    <div class="guige">
+        <div class="setguigeclassname">
+            <h2>设置规格<span class="productname"></span></h2>
+            <button onclick="clearguige()">清空该产品规格</button>
+            <button onclick="createguige()">创建新规格</button>
+            <button onclick="syncguige()">同步规格到数据库</button>
+            <div class="content">
+
+            </div>
+        </div>
+        <div class="showguige">
+            <h2>当前商品规格<span class="productname"></span></h2>
+            <div class="content">
+
+            </div>
+        </div>
+    </div>
+    <!--设置规格搭配的价格数量-->
+    <div class="three">
+        <h2>规格搭配<span class="productname"></span></h2>
+        <button onclick="createguigedapei()">生成（初始化）该产品的规格搭配</button>
+        <button onclick="setguigedapei()">将刚生成（未上传到）规格搭配传到数据库</button>
+        <button onclick="getguigedapei()">从数据库上获取该产品的规格搭配</button>
+        <button onclick="renderguigedapei()">渲染该产品所有规格搭配</button>
+
+        <button onclick="clearguigedapei()">清空数据库内该产品所有规格搭配</button>
+        
+        <div class="content">
+
+        </div>
+
+    </div>
+    <script src="./jquery.js"></script>
+    <script>
+        var product = null;
+        //获取产品列表
+        function getproduct() {
+            console.log('调用方法成功');
+            // let res = [{ "id": 12, "name": "中国T-34中型坦克", "icon": "/images/icon_china_mt_t34.png", "specifications": null, "swiper": ["/images/swiper_china_mt_t34.png"], "detailed": { "houdu": "52", "sudu": "55", "koujing": "57", "chuanshen": "189" }, "text": "1950年代，苏联向中国交付中国订购的T-34-85坦克时，曾交付了一批T-34-76坦克，这批坦克被中国转赠给了朝鲜。1960年代，中国坦克设计人员帮助朝鲜对这批坦克进行了改进，升级了发动机和行走系统。", "nation": "中国", "level": "5", "vehicleType": "中型坦克" }, { "id": 13, "name": "58式中型坦克", "icon": "/images/icon_china_mt_58.png", "specifications": null, "swiper": ["/images/swiper_china_mt_58.png"], "detailed": { "houdu": "90", "sudu": "55", "koujing": "85", "chuanshen": "172" }, "text": "1954年中国决定仿制生产T-34-85坦克，并计划1958年投产，所以将其命名为58式中型坦克。中国版的T-34-85和苏联原版的存在着一些差异，主要集中在炮塔和行走部分。", "nation": "中国", "level": "6", "vehicleType": "中型坦克" }, { "id": 14, "name": "59式中型坦克", "icon": "/images/icon_china_mt_59.png", "specifications": null, "swiper": ["/images/swiper_china_mt_59.png"], "detailed": { "houdu": "200", "sudu": "56", "koujing": "100", "chuanshen": "241" }, "text": "1957年晚些时候，中国包头坦克工厂生产的T-54坦克的仿制型。截止1987年一共生产6000多辆。1956年购买T-54A全套图纸技术资料和坦克生产工厂，58年11月5日617厂第1辆组装车下线。59年提高国产化率，首批33辆中的32辆参加国庆阅兵。59年底设计定型，63年3月18日生产定型。59式中型坦克累计生产1万余辆。", "nation": "中国", "level": "8", "vehicleType": "中型坦克" }];
+            // let data = res;
+            // let len = data.length;
+            // let product_ul = $('.productList>ul');
+            // product_ul.empty();
+            // for (let i = 0; i < len; i++) {
+            //     product_ul.append(`
+            //                 <li>
+            //                     <div class="icon">
+            //                         <img src="${data[i].icon}" alt="${data[i].name}"/>
+            //                     </div>
+            //                     <div>
+            //                         <p>坦克名称：${data[i].name}</p>
+            //                         <p>坦克级别：${data[i].level}</p>
+            //                         <p>坦克类型：${data[i].vehicleType}</p>
+            //                         <p>坦克国籍：${data[i].nation}</p>
+            //                     </div>
+            //                     <div>
+            //                         <h3>${data[i].specifications === null ? '未设置产品规格' : '已设置产品规格'}</h3>
+            //                         <button onclick="showorsetguige(${i},${data[i].id},${data[i].specifications},'${data[i].name}')">设置产品规格</button>
+            //                     </div>
+            //                 </li>
+            //             `);
+            // }
+            // return false;
+
+            $.ajax({
+                type: "get",
+                url: "/api/getproduct",
+                success: function (res) {
+                    let data = res.data;
+                    product = data;
+                    let len = data.length;
+                    let product_ul = $('.productList>ul');
+                    product_ul.empty();
+                    for (let i = 0; i < len; i++) {
+                        product_ul.append(`
+                            <li>
+                                <div class="icon">
+                                    <img src="${data[i].icon}" alt="${data[i].name}"/>
+                                </div>
+                                <div>
+                                    <p>坦克名称：${data[i].name}</p>
+                                    <p>坦克级别：${data[i].level}</p>
+                                    <p>坦克类型：${data[i].vehicleType}</p>
+                                    <p>坦克国籍：${data[i].nation}</p>
+                                </div>
+                                <div>
+                                    <h3>${data[i].specifications === null ? '未设置产品规格' : '已设置产品规格'}</h3>
+                                    <button onclick="showorsetguige(${i},${data[i].id},'${data[i].name}')">设置产品规格</button>
+                                </div>
+                            </li>
+                        `);
+                    }
+                },
+                error: function (err) {
+                    alert('请求获取产品列表错误');
+                }
+
+            })
+        }
+        window.onload = function () {
+            getproduct();
+        }
+        //当前选择产品的id
+        var productId = null;
+        //当前选择产品的规格
+        var guige = null;
+        //查看或设置产品规格
+        function showorsetguige(index, id, name) {
+            console.log(index, id, name);
+            $('.productname').text(`:（${name}）`);
+            let len = product.length;
+            for (let i = 0; i < len; i++) {
+                if (product[i].id === id) {
+                    guige = product[i].specifications;
+                    if (guige != null) {
+                        guige = JSON.parse(product[i].specifications);
+                    };
+                    //console.log(guige);
+                    productId = id;
+                    renderguige(guige);//渲染到页面上
+                    renderguige2(guige);//渲染到页面上
+                    break;
+                }
+            }
+
+
+        }
+
+        //更细产品规格方法
+        function setguige(id, value) {
+            if (id != undefined && value != undefined) {
+                $.ajax({
+                    "type": "post",
+                    "url": "/api/setguige",
+                    "data": {
+                        "id": id,
+                        "value": value
+                    },
+                    success: function (data) {
+                        if (data.status) {
+                            alert('数据库更新产品规格成功！')
+                        } else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function (err) {
+                        console.log('请求设置产品规格接口出现错误');
+                    }
+                });
+            } else {
+                console.log("设置规格需要有id和value值");
+            }
+        }
+
+        //清空该产品所有规格
+        function clearguige() {
+            if (productId === null) {
+                alert('还没有选中产品！')
+            } else {
+                var r = confirm('请确认是否要删除该产品所有的规格！');
+                if (r == true) {
+                    setguige(productId, 'empty');
+                }
+
+            }
+        }
+
+        //创建新规格
+        function createguige() {
+            if (productId === null) {
+                alert('还没有选中产品！')
+            } else {
+                var name = prompt("请输入规格名称：")
+                if (name != null && name != "") {
+                    //console.log(name)
+                    let obj = {
+                        "name": name,
+                        "item": []
+                    }
+                    console.log(name);
+                    if (guige != null) {
+                        guige.push(obj);
+                        renderguige(guige);//渲染到页面上
+                        renderguige2(guige);//渲染到页面上
+                    } else {
+                        guige = [obj];
+                        renderguige(guige);//渲染到页面上
+                        renderguige2(guige);//渲染到页面上
+                    }
+
+                }
+            }
+        }
+
+        //同步规格到数据库
+        function syncguige() {
+            if (productId != null) {
+                if (guige != null) {
+                    setguige(productId, JSON.stringify(guige));
+                } else {
+                    alert('请为产品设置规格！');
+                }
+            } else {
+                alert('还没有选中产品！');
+            }
+        }
+
+
+        let guigeTestObj = [{
+            //这里是要被渲染字段
+            name: "发动机",
+            item: [{
+                name: "原装发动机"
+            },
+            {
+                name: "高性能发动机"
+            }
+            ]
+        },
+        {
+            name: "涂装",
+            item: [{
+                name: "坦克出厂原漆"
+            },
+            {
+                name: "现代数码迷彩"
+            }
+            ]
+        }
+        ];
+
+        //渲染当前产品的产品规格项
+        function renderguige(list) {
+            //console.log('调用了')
+            $('.showguige>.content').empty();
+            if (list != null) {
+                let str = '';
+                list.forEach(function (itemi, i) {
+                    let titleStr = `<h4>规格名称：${list[i].name}</h4>`;
+                    let listStr = '';
+                    itemi.item.forEach(function (itemj, j) {
+                        listStr += `<li>${list[i].item[j].name}</li>`;
+                        listStr = `<ul>${listStr}</ul>`;
+                    })
+                    str += `<div>${titleStr + listStr}</div>`;
+                });
+                $('.showguige>.content').html(str);
+            }
+        }
+        //renderguige(guigeTestObj);
+
+        //渲染规格选项方法2
+        function renderguige2(list) {
+            $('.setguigeclassname>.content').empty();
+            if (list != null) {
+                let str = '';
+                list.forEach(function (itemi, i) {
+                    let titleStr = `<h4>规格名称：${list[i].name}<button onclick="delguige(${i},'${list[i].name}')">删除这个规格</button></h4>`;
+                    let listStr = '';
+                    itemi.item.forEach(function (itemj, j) {
+                        listStr += `<li>${list[i].item[j].name}<button onclick="delguigeitem('${list[i].name}','${list[i].item[j].name}')">删除规格的这个选项</button></li>`;
+                        listStr = `<ul>${listStr}</ul>`;
+                    })
+                    str += `<div>${titleStr + listStr}<button onclick="addguigeitem('${list[i].name}')">新增一个选项</button></div>`;
+                });
+                $('.setguigeclassname>.content').html(str);
+            }
+        }
+        //renderguige2(guigeTestObj);
+
+        //删除这个规格
+        function delguige(index, name) {
+            guige.splice(index, 1)
+            console.log(guige);
+            renderguige(guige);//渲染到页面上
+            renderguige2(guige);//渲染到页面上
+        }
+
+        //删除某个规格的某个选项
+        function delguigeitem(guigeName, itemName) {
+            let guigeLen = guige.length;
+            for (let i = 0; i < guigeLen; i++) {
+                if (guige[i].name === guigeName) {
+                    let itemLen = guige[i].item.length;
+                    let arr = [];
+                    for (let j = 0; j < itemLen; j++) {
+                        if (guige[i].item[j].name != itemName) {
+                            arr.push(guige[i].item[j])
+                        }
+                        if (j == itemLen - 1) {
+                            guige[i].item = arr;
+                            renderguige(guige);//渲染到页面上
+                            renderguige2(guige);//渲染到页面上
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        //给某个规格新增一个选项
+        function addguigeitem(guigeName) {
+            let guigeLen = guige.length;
+            var itemName = prompt("请输入规格的选项值：")
+            if (itemName != null && itemName != "") {
+                //console.log(name)
+                for (let i = 0; i < guigeLen; i++) {
+                    if (guige[i].name === guigeName) {
+                        let obj = { name: itemName }
+                        guige[i].item.push(obj);
+                        renderguige(guige);//渲染到页面上
+                        renderguige2(guige);//渲染到页面上
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        //规格搭配
+        var guigedapeiTestObj = [
+            //所有的规格可能情况都在这个数组里
+            {
+                id: "19",
+                price: 5000,
+                stock: 5, //库存
+                difference: "原装发动机,坦克出厂原漆" //此规格的属性键值
+            },
+            {
+                id: "20",
+                price: 6000,
+                stock: 4,
+                difference: "原装发动机,现代数码迷彩"
+            },
+            {
+                id: "21",
+                price: 7000,
+                stock: 3,
+                difference: "高性能发动机,坦克出厂原漆"
+            },
+            {
+                id: "22",
+                price: 8000,
+                stock: 0,
+                difference: "高性能发动机,现代数码迷彩"
+            }
+        ];
+        var guigedapei = null;
+
+        //生成(初始化)规格搭配
+        function createguigedapei() {
+            if (productId != null) {
+                if (guige != null) {
+                    window.guigedapeiList = [];
+                    let len = guige.length;
+                    for (var i = 0; i < len; i++) {
+                        if (guige[i].item.length == 0) {
+                            break;
+                        }
+                    }
+                    if (i == len) {
+                        //console.log("ok");
+                        //生成规格搭配值
+                        cl(guige, 0);
+                        window.setTimeout(function () {
+                            console.log(window.guigedapeiList);
+                            let guigedapeiListLen = window.guigedapeiList.length;
+                            let newarr = [];
+                            for (let j = 0; j < guigedapeiListLen; j++) {
+                                let obj = {
+                                    difference: window.guigedapeiList[j].join(','),
+                                    price: 0,
+                                    stock: 0
+                                }
+                                newarr.push(obj);
+                            }
+                            guigedapei = newarr;
+                            console.log(guigedapei);
+                            //渲染刚生成出来的规格搭配
+                            renderguigedapei(guigedapei)
+                        }, 500);
+                    } else {
+                        alert('某个规格还没有子选项')
+                    }
+                    // console.log(arr);
+                    // let arr2 = [];
+                    // arr.forEach(function (item, i) {
+                    //     arr2.push(item.join(','))
+                    // })
+                    // console.log(arr2);
+                } else {
+                    alert('还没设置规格，请先设置规格及规格子选项')
+                }
+            } else {
+                alert('还没有选中产品！')
+            }
+        }
+
+        //生成规格的规格搭配方法
+        //let testArr = [{ "name": "涂装", "item": [{ "name": "坦克出厂原漆" }, { "name": "现代数码迷彩" }] }, { "name": "发动机", "item": [{ "name": "坦克出厂发动机" }, { "name": "高级柴油发动机" }] }];
+        //cl(testArr,0);
+        //cl方法使用要求，至少有一个规格且每个规格都应有子选项
+        function cl(guigeObj, i, arr) {
+            if (i === 0) {
+                guigeObj[i].item.forEach(function (item, index) {
+                    let newarr = [item.name];
+                    if (guigeObj.length != 1) {
+                        cl(guigeObj, i + 1, newarr);
+                    } else {
+                        //console.log(newarr)
+                        window.guigedapeiList.push(newarr);
+                    }
+                })
+            } else {
+                guigeObj[i].item.forEach(function (item, index) {
+                    let newarr = JSON.parse(JSON.stringify(arr));
+                    newarr.push(item.name);
+                    if (i + 1 != guigeObj.length) {
+                        cl(guigeObj, i + 1, newarr);
+                    } else {
+                        console.log(newarr);
+                        window.guigedapeiList.push(newarr);
+                    }
+                })
+            }
+        };
+
+
+        //渲染该产品所有规格搭配
+        function renderguigedapei(list) {
+            let len = list.length;
+            let str = '';
+            for (let i = 0; i < len; i++) {
+                str += `
+                <li>
+                    <div>配置值：${list[i].difference}</div>
+                    <div>
+                        <label>数量：</label>
+                        <span>${list[i].stock}</span>
+                        <button onclick="modifydapeivalue('${list[i].difference}','stock')">修改数量</button>
+                    </div>
+                    <div>
+                        <label>价格：</label>
+                        <span>${list[i].price}</span>
+                        <button onclick="modifydapeivalue('${list[i].difference}','price')">修改价格</button>
+                    </div>
+                </li>
+                `;
+            }
+            $('.three>.content').html(str);
+        }
+        //renderguigedapei(guigedapeiTestObj);
+
+        //修改搭配的数量和价格
+        function modifydapeivalue(difference, key) {
+            let len = guigedapei.length;
+            var value = prompt(`请输入搭配的${key == 'stock' ? '数量' : '价格'}值`)
+            if (value != null && value != "") {
+                for (let i = 0; i < len; i++) {
+                    if (guigedapei[i].difference == difference) {
+                        //渲染规格搭配
+                        if(guigedapei[i].id!=undefined){
+                            //数据库里有这个数据，则修改数据里数据成功了在修改本地数据
+                            $.ajax({
+                                type:'post',
+                                url:'/api/modifyguigedapei',
+                                data:{
+                                    id:guigedapei[i].id,
+                                    key:key,
+                                    value:value
+                                },
+                                success:function(res){
+                                    if(res.status){
+                                        getguigedapei()//修改成功重新拉取数据
+                                    }else{
+                                        alert(res.message)
+                                    }
+                                },
+                                error:function(err){
+                                    console.log(err);
+                                }
+                            })
+                        }else{
+                            //数据库里还没有则直接修改本地数据
+                            guigedapei[i][key] = value;
+                        }
+                        renderguigedapei(guigedapei);
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        //清空当前产品数据库里规格搭配
+        function clearguigedapei() {
+            if (productId != null) {
+                $.ajax({
+                    "type":"post",
+                    "url":"/api/delguigedapei",
+                    "data":{
+                        "productId":productId
+                    },
+                    success:function(res){
+                        alert(res.message)
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                });
+            } else {
+                alert("还没有选中产品！");
+            }
+        }
+
+        //上传刚初始化的规格搭配到数据库
+        function setguigedapei() {
+            if (productId != null) {
+                if (guigedapei != null) {
+                    $.ajax({
+                        type: 'post',
+                        url: '/api/setguigedapei',
+                        data: {
+                            "productId": productId,
+                            "guigedapei": JSON.stringify(guigedapei)
+                        },
+                        success: function (res) {
+                            alert(res.message);
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    })
+                } else {
+                    alert('请为产品设置规格搭配！');
+                }
+            } else {
+                alert('还没有选中产品！');
+            }
+        }
+
+        //获取产品的规格搭配
+        function getguigedapei() {
+            if (productId != null) {
+                $.ajax({
+                    type: 'get',
+                    url: '/api/getguigedapei',
+                    data: {
+                        "productId": productId,
+                    },
+                    success: function (res) {
+                        if(res.status){
+                            guigedapei = res.data;
+                            renderguigedapei(guigedapei);
+                        }else{
+                            alert(res.message);
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            } else {
+                alert('还没有选中产品！');
+            }
+        }
+
+    </script>
+</body>
+
+</html>

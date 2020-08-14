@@ -1,0 +1,108 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "坦克商城",
+				"navigationStyle":"custom",
+				"navigationBarTextStyle":"white"
+			}
+		},
+		{
+			"path": "pages/category/category",
+			"style": {
+				"navigationBarTitleText": "坦克类别",
+				"navigationStyle":"default",
+				"navigationBarTextStyle":"black",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/cart/cart",
+			"style": {
+				"navigationBarTitleText": "购物车",
+				"navigationStyle":"default",
+				"navigationBarTextStyle":"black",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle":"default",
+				"navigationBarTextStyle":"black",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		}
+	    ,{
+            "path" : "pages/createOrder/createOrder",
+            "style" : {
+				"navigationBarTitleText":"创建订单",
+				"navigationStyle":"default",
+				"navigationBarTextStyle":"black",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
+        ,{
+            "path" : "pages/product/product",
+            "style" : {
+				"navigationStyle":"default",
+				"navigationBarTitleText":"产品详细",
+				"navigationBarTextStyle":"black",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
+        ,{
+            "path" : "pages/order/order",
+            "style" : {
+				"navigationStyle":"default",
+				"navigationBarTitleText":"我的订单",
+				"navigationBarTextStyle":"black",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
+        ,{
+            "path" : "pages/pay/pay",
+            "style" : {}
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar":{
+		"color":"#000000",
+		"selectedColor":"#d52a26",
+		"borderStyle":"black",
+		"backgroundColor":"white",
+		"list":[
+			{
+				"pagePath":"pages/index/index",
+				"iconPath":"static/home.png",
+				"selectedIconPath":"static/home-current.png",
+				"text":"首页"
+			},
+			{
+				"pagePath":"pages/category/category",
+				"iconPath":"static/category.png",
+				"selectedIconPath":"static/category-current.png",
+				"text":"类别"
+			},
+			{
+				"pagePath":"pages/cart/cart",
+				"iconPath":"static/cart.png",
+				"selectedIconPath":"static/cart-current.png",
+				"text":"购物车"
+			},
+			{
+				"pagePath":"pages/my/my",
+				"iconPath":"static/my.png",
+				"selectedIconPath":"static/my-current.png",
+				"text":"我的"
+			}
+		]
+	}
+}

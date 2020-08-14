@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>坦克商城 | 后台管理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .clearfix:after,
+        .clearfix:before {
+            content: "";
+            display: table;
+        }
+
+        .clearfix:after {
+            clear: both;
+        }
+
+        .clearfix {
+            zoom: 1;
+        }
+
+        body {
+            background-color: #EDF1F0;
+        }
+
+        .el-header {
+            background-color: #B3C0D1;
+            /* color: #333;
+            text-align: left;
+            line-height: 60px; */
+        }
+
+        .el-aside {
+            width: 200px;
+            background-color: #D3DCE6;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+        }
+
+        .header_logo {
+            display: flex;
+            align-items: center;
+            height: 60px;
+        }
+
+        .header_logo>img {
+            width: 54px;
+            height: 54px;
+            background-color: #2C405A;
+        }
+
+        .header_logo>p {
+            font-size: 26px;
+            line-height: 60px;
+            color: black;
+            margin-left: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <el-container>
+            <el-header>
+                <div class="header_logo">
+                    <img src="" alt="">
+                    <p>坦克商城后台管理</p>
+                </div>
+            </el-header>
+            <el-container>
+
+                <el-aside>
+                    <el-col>
+                        <el-menu default-active="0">
+                            <el-menu-item v-for="(item,index) in menuList" :index="index" :key='index' >
+                                <i class="el-icon-menu"></i>
+                                <span slot="title" v-text="item.name"></span>
+                            </el-menu-item>
+                        </el-menu>
+                    </el-col>
+                </el-aside>
+
+                <el-main>Main</el-main>
+            </el-container>
+        </el-container>
+    </div>
+
+
+    <script src="./vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="./axios.min.js"></script>
+    <script>
+        new Vue({
+            'el': '#app',
+            'data': function () {
+                return {
+                    menuList: [
+                        {
+                            "name": "添加产品"
+                        },
+                        {
+                            "name": "产品规格"
+                        },
+                        {
+                            "name": "订单管理"
+                        },
+                    ],
+                }
+            },
+            methods: {
+
+            }
+        })
+    </script>
+</body>
+
+</html>

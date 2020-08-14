@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>坦克商城 | 添加产品</title>
+</head>
+
+<body>
+    <h1>添加产品</h1>
+    <div id="board">
+
+    </div>
+    <div>
+        <a href="javascript:;">设置产品规格页面</a>
+    </div>
+    <section>
+        <div>
+            <label for="name">产品名称</label>
+            <input type="text" id="name">
+        </div>
+        <div>
+            <label for="iconImage">产品ICON图片</label>
+            <input type="file" id="iconImage">
+            <img src="" alt="" id="iconImageShow" width="200px">
+        </div>
+        <div>
+            <label for="swiperImage">产品轮播图图片（暂时只能上传一张）</label>
+            <input type="file" id="swiperImage">
+            <img src="" alt="" id="swiperImageShow" width="200px">
+        </div>
+        <div>
+            <p>产品详细信息：</p>
+            <div>
+                <label for="guojia">国家：</label>
+                <select name="" id="guojia">
+                    <option value="中国">中国</option>
+                    <option value="德国">德国</option>
+                    <option value="捷克">捷克</option>
+                    <option value="美国">美国</option>
+                    <option value="日本">日本</option>
+                    <option value="瑞典">瑞典</option>
+                    <option value="苏联">苏联</option>
+                    <option value="英国">英国</option>
+                </select>
+            </div>
+            <div>
+                <label for="leixing">坦克类型：</label>
+                <select name="" id="leixing">
+                    <option value="轻型坦克">轻型坦克</option>
+                    <option value="中型坦克">中型坦克</option>
+                    <option value="重型坦克">重型坦克</option>
+                    <option value="坦克歼击车">坦克歼击车</option>
+                    <option value="自行火炮">自行火炮</option>
+                </select>
+            </div>
+            <div>
+                <label for="jibie">坦克级别：</label>
+                <select name="" id="jibie">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div>
+                <label for="houdu">坦克最大装甲厚度：</label>
+                <input type="text" id="houdu">mm
+            </div>
+            <div>
+                <label for="sudu">坦克最大速度：</label>
+                <input type="text" id="sudu">km/h
+            </div>
+            <div>
+                <label for="koujing">坦克炮口径：</label>
+                <input type="text" id="koujing">mm
+            </div>
+            <div>
+                <label for="chuanshen">坦克炮弹最大穿深：</label>
+                <input type="text" id="chuanshen">mm
+            </div>
+        </div>
+        <div>
+            <label for="miaoshu">产品文字描述（如：这辆坦克的历史）:</label>
+            <br>
+            <textarea id="miaoshu" cols="30" rows="10"></textarea>
+        </div>
+        <button id="sendButtonFile">提交</button>
+
+    </section>
+
+    <!-- 
+    <input type="file" id="files" />
+    <button id="sendButtonFile">模拟上传文件数据</button>
+    <button id="sendButton">模拟发送普通post数据</button> -->
+
+    <script src="./jquery.js"></script>
+    <script>
+        //模拟发送普通数据
+        $("#sendButton").on('click', function () {
+            return;
+            $.ajax({
+                "type": "post",
+                "url": "http://localhost:8080/api/addproduct",
+                "data": {
+                    "a": 1,
+                    "b": 2
+                },
+                success: function (data) {
+                    $("#board").text(data)
+                },
+                error: function (err) {
+                    $("#board").text(err)
+                }
+            })
+        });
+
+        //监听icon是否已上传到input上，已上传到，预览图片
+        $('#iconImage').on('change', function () {
+            console.log('iconImage发生变化');
+            let iconImage = document.getElementById('iconImage').files;//产品ICON图片
+            if (iconImage.length >= 1) {
+                const windowURL = window.URL || window.webkitURL;
+                const imgURL = windowURL.createObjectURL(iconImage[0]);
+                $('#iconImageShow').attr('src', imgURL);
+            }
+        });
+
+        //监听swiper是否已上传到input上，已上传到，预览图片
+        $('#swiperImage').on('change', function () {
+            console.log('swiperImage');
+            var swiperImage = document.getElementById('swiperImage').files;//产品轮播图图片
+            if (swiperImage.length >= 1) {
+                const windowURL = window.URL || window.webkitURL;
+                const imgURL = windowURL.createObjectURL(swiperImage[0]);
+                $('#swiperImageShow').attr('src', imgURL);
+            }
+        });
+
+        //发送formdata数据到后台
+        $("#sendButtonFile").click(function () {
+            //var files = document.getElementById('files').files;
+            //console.log(files);
+
+            var name = $('#name').val();//产品名称
+            var iconImage = document.getElementById('iconImage').files;//产品ICON图片
+            var swiperImage = document.getElementById('swiperImage').files;//产品轮播图图片
+            //产品详细信息
+            var guojia = $('#guojia').val();//国家
+            var leixing = $('#leixing').val();//类型
+            var jibie = $('#jibie').val();//级别
+            var houdu = $('#houdu').val();//装甲厚度
+            var sudu = $('#sudu').val();//速度
+            var koujing = $('#koujing').val();//火炮口径
+            var chuanshen = $('#chuanshen').val();//火炮穿深
+            //产品详细信息
+
+            var miaoshu = $('#miaoshu').val();//产品文字描述
+            if (name.length >= 1 && iconImage.length >= 1 && swiperImage.length >= 1 && guojia.length >= 1 && jibie.length >= 1 && houdu.length >= 1 && sudu.length >= 1 && koujing.length >= 1 && chuanshen.length >= 1 && miaoshu.length >= 1) {
+                console.log("name：" + name);
+                console.log("iconImage：" + iconImage);
+                console.log("swiperImage：" + swiperImage);
+                console.log("guojia：" + guojia);
+                console.log("jibie：" + jibie);
+                console.log("houdu：" + houdu);
+                console.log("sudu：" + sudu);
+                console.log("koujing：" + koujing);
+                console.log("chuanshen：" + chuanshen);
+                console.log("miaoshu：" + miaoshu);
+
+                var form = new FormData();
+                form.append("name", name);
+                form.append("iconImage", iconImage[0]);
+                form.append("swiperImage", swiperImage[0]);
+                var obj = {
+                    "guojia": guojia,
+                    "leixing": leixing,
+                    "jibie": jibie,
+                    "houdu": houdu,
+                    "sudu": sudu,
+                    "koujing": koujing,
+                    "chuanshen": chuanshen,
+                }
+                form.append("detailed", JSON.stringify(obj));//商品详细信息
+                form.append("miaoshu", miaoshu);
+
+                //jq,ajax实现上传文件显示上传进度
+                $.ajax({
+                    type: "post",
+                    url: "/api/addproduct",
+                    data: form,
+                    contentType: false, //必须false才会自动加上正确的Content-Type
+                    processData: false, //必须false才会避开jQuery对formdata的默认处理
+                    cache: false, //缓存
+                    xhr: function () {
+                        //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数  
+                        myXhr = $.ajaxSettings.xhr();
+                        if (myXhr.upload) { //检查upload属性是否存在  
+                            //绑定progress事件的回调函数  
+                            myXhr.upload.addEventListener('progress', function (ev) {
+                                if (ev.lengthComputable) {
+                                    var precent = 100 * ev.loaded / ev.total;
+                                    console.log(precent);
+                                }
+                            }, false);
+                        }
+                        return myXhr; //xhr对象返回给jQuery使用  
+                    },
+                    success: function (data) {
+                        $("#board").text(JSON.stringify(data));
+                    },
+                    error: function () {
+                        console.log('上传formdata数据失败！')
+                    }
+                })
+            } else {
+                alert("有数据是空的！")
+            }
+        })
+    </script>
+</body>
+
+</html>
