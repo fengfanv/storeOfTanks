@@ -244,9 +244,11 @@
 		background: #2C405A;
 		display: flex;
 		align-items: center;
+		overflow: hidden;
 	}
 	.rc_li>.image>image {
-		font-size: 0;
+		width: 160rpx;
+		height: 100rpx;
 	}
 
 	.rc_li>text {

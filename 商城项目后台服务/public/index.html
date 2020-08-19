@@ -1,95 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>坦克商城 | 后台管理</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        .clearfix:after,
-        .clearfix:before {
-            content: "";
-            display: table;
-        }
-
-        .clearfix:after {
-            clear: both;
-        }
-
-        .clearfix {
-            zoom: 1;
-        }
-
-        body {
-            background-color: #EDF1F0;
-        }
-
-        .el-header {
-            background-color: #B3C0D1;
-            /* color: #333;
-            text-align: left;
-            line-height: 60px; */
-        }
-
-        .el-aside {
-            width: 200px;
-            background-color: #D3DCE6;
-        }
-
-        .el-main {
-            background-color: #E9EEF3;
-        }
-
-        .header_logo {
-            display: flex;
-            align-items: center;
-            height: 60px;
-        }
-
-        .header_logo>img {
-            width: 54px;
-            height: 54px;
-            background-color: #2C405A;
-        }
-
-        .header_logo>p {
-            font-size: 26px;
-            line-height: 60px;
-            color: black;
-            margin-left: 10px;
-        }
-    </style>
+    <title>后台管理</title>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
     <div id="app">
         <el-container>
-            <el-header>
+            <el-header height="80px">
                 <div class="header_logo">
                     <img src="" alt="">
-                    <p>坦克商城后台管理</p>
+                    <p>商城后台管理</p>
+                    <el-dropdown style="position: absolute;right:0;" @command="handleCommand">
+                        <span class="el-dropdown-link" style="color:#ced2d7;">
+                            菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="黄金糕">黄金糕</el-dropdown-item>
+                            <el-dropdown-item command="狮子头">狮子头</el-dropdown-item>
+                            <el-dropdown-item command="螺蛳粉">螺蛳粉</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </div>
+
             </el-header>
             <el-container>
-
-                <el-aside>
-                    <el-col>
-                        <el-menu default-active="0">
-                            <el-menu-item v-for="(item,index) in menuList" :index="index" :key='index' >
-                                <i class="el-icon-menu"></i>
-                                <span slot="title" v-text="item.name"></span>
+                <el-aside width="250px">
+                    <el-menu default-active="0" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+                        <div v-for="(menuItem,menuIndex) in menuList" :key="'menufather'+menuIndex">
+                            <el-menu-item v-if="menuItem.item.length==0" :index="menuItem.index"
+                                @click="selectMenu(menuItem.name)">
+                                <i :class="[menuItem.icon]"></i>
+                                <span v-text="menuItem.name">导航一</span>
                             </el-menu-item>
-                        </el-menu>
-                    </el-col>
+
+                            <el-submenu v-if="menuItem.item.length>0" :index="menuItem.index">
+                                <template slot="title" v-if="menuItem.item.length>0">
+                                    <i :class="[menuItem.icon]"></i>
+                                    <span v-text="menuItem.name">导航一</span>
+                                </template>
+                                <el-menu-item v-for="(menuChildItem,menuChildIndex) in menuItem.item"
+                                    :key="'menuchild'+menuChildIndex" :index="menuChildItem.index"
+                                    v-text="menuChildItem.name"
+                                    @click="selectMenu(menuItem.name+'-'+menuChildItem.name)">选项1</el-menu-item>
+                            </el-submenu>
+                        </div>
+
+
+                    </el-menu>
                 </el-aside>
 
-                <el-main>Main</el-main>
+                <el-main>
+
+                    <div class="content">
+                        <div class="separator">
+                            <el-breadcrumb separator="/">
+                                <el-breadcrumb-item v-for="(item,index) in selectMenuArr" :key="index">{{item}}
+                                </el-breadcrumb-item>
+                            </el-breadcrumb>
+                        </div>
+
+                    </div>
+                </el-main>
             </el-container>
         </el-container>
     </div>
@@ -105,19 +82,56 @@
                 return {
                     menuList: [
                         {
-                            "name": "添加产品"
+                            "name": "首页",
+                            "icon": "el-icon-s-home",
+                            "index": "0",
+                            "item": []
                         },
                         {
-                            "name": "产品规格"
+                            "name": "产品管理",
+                            "icon": "el-icon-circle-plus",
+                            "index": "1",
+                            "item": [
+                                {
+                                    "name": "添加产品",
+                                    "index": "1-0",
+                                },
+                                {
+                                    "name": "管理产品",
+                                    "index": "1-1",
+                                },
+                                {
+                                    "name": "规格管理",
+                                    "index": "1-2",
+                                }
+                            ]
                         },
                         {
-                            "name": "订单管理"
+                            "name": "订单管理",
+                            "icon": "el-icon-s-order",
+                            "index": "2",
+                            "item": []
                         },
                     ],
+                    selectMenuArr: ['首页'],
                 }
             },
             methods: {
-
+                //选择menu
+                selectMenu(name, stringIndex) {
+                    console.log(name, stringIndex);
+                    console.log(name.split('-'));
+                    this.selectMenuArr = name.split('-');
+                },
+                handleOpen(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                handleClose(key, keyPath) {
+                    console.log(key, keyPath);
+                },
+                handleCommand(command) {
+                    this.$message('click on item ' + command);
+                }
             }
         })
     </script>
