@@ -8,6 +8,7 @@
 			</view>
 		</view>
 		<view class="content">
+			<button @tap="requestPost">post数据发送</button>
 			<!-- 搜索框 -->
 			<view class="search">
 				<view class="box">
@@ -187,18 +188,18 @@
 			this.toForYouPage(1);
 			//获取产品列表
 			this.getProduct();
-			
+
 			//检测是否登录
 			uni.getStorage({
 				key: 'isLogin',
 				success(isLoginRes) {
 					console.log(isLoginRes.data)
 					if (isLoginRes.data) {
-						_this.$store.commit('setIsLogin',true);
+						_this.$store.commit('setIsLogin', true);
 						uni.getStorage({
 							key: 'userId',
 							success(userIdRes) {
-								_this.$store.commit('setUserId',userIdRes.data);
+								_this.$store.commit('setUserId', userIdRes.data);
 							}
 						});
 					}
@@ -206,6 +207,30 @@
 			})
 		},
 		methods: {
+			requestPost() {
+				let _this = this;
+				uni.request({
+					method: "post",
+					url: _this.URL + "/api/setName",
+					data: {
+						"name": "我是微信",
+						"sex": "女"
+					},
+					header: {
+						"content-type": "appLication/json"
+					},
+					success(data) {
+						console.log('------success-start------')
+						console.log(data)
+						console.log('------success-end------')
+					},
+					fail(err) {
+						console.log('------err-start------')
+						console.log(err)
+						console.log('------err-end------')
+					}
+				})
+			},
 			getProduct: function() {
 				let _this = this;
 				uni.showLoading({
@@ -235,7 +260,7 @@
 							icon: 'none',
 							duration: 2000
 						});
-						
+
 					}
 				})
 			},
